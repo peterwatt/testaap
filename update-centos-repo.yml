@@ -23,3 +23,10 @@
     - name: Update yum cache
       command: yum makecache
       when: repo_modified.changed
+
+    - name: Update CentOS to the latest version
+      yum:
+        name: '*'
+        state: latest
+      when: repo_modified.changed
+
