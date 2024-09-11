@@ -9,8 +9,8 @@
   vars:
     rhsm_username: pwatt@deploypartners.com
     rhsm_password: Fred1234$
-    rhsm_org: MY_ORG
-    rhsm_activation_key: MY_ACTIVATION_KEY
+    rhsm_org: 13088191
+    rhsm_activation_key: Redhat8
 
   tasks:
     - name: Generate pre-conversion analysis report
