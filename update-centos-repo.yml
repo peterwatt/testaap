@@ -1,0 +1,25 @@
+- name: Update CentOS-Base.repo
+  hosts: all
+  become: yes
+  tasks:
+    - name: Modify CentOS-Base.repo
+      replace:
+        path: /etc/yum.repos.d/CentOS-Base.repo
+        regexp: '^#baseurl=http://mirror.centos.org/centos/(.*)$'
+        replace: 'baseurl=http://vault.centos.org/centos/\1'
+      register: repo_modified
+
+    - name: Comment out mirrorlist entries
+      replace:
+        path: /etc/yum.repos.d/CentOS-Base.repo
+        regexp: '^mirrorlist='
+        replace: '#mirrorlist='
+      when: repo_modified.changed
+
+    - name: Clean yum cache
+      command: yum clean all
+      when: repo_modified.changed
+
+    - name: Update yum cache
+      command: yum makecache
+      when: repo_modified.changed
