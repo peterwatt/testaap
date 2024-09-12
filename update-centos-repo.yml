@@ -33,14 +33,25 @@
     - name: Reboot the system
       reboot:
         msg: "Reboot initiated by Ansible after updating CentOS."
-        reboot_timeout: 600  # Extended timeout
-        pre_reboot_delay: 10  # Wait before reboot starts
-        post_reboot_delay: 30 # Wait after reboot before checking connection
+        reboot_timeout: 600  # Allow plenty of time for the reboot
+        connect_timeout: 20  # Timeout for SSH to respond
+        pre_reboot_delay: 5   # Short delay before rebooting
+        post_reboot_delay: 20 # Wait before attempting to reconnect
+        test_command: "/bin/true"  # Skip Ansible's default boot time validation
       when: repo_modified.changed
 
-    - name: Wait for the system to become reachable
+    - name: Wait for the system to shut down completely
+      wait_for:
+        host: "{{ inventory_hostname }}"
+        port: 22
+        state: stopped
+        timeout: 60
+      when: repo_modified.changed
+
+    - name: Wait for the system to start up and be reachable
       wait_for_connection:
-        timeout: 300  # Adjust as necessary for your environment
+        timeout: 300
+        delay: 10  # Start checking after 10 seconds
       when: repo_modified.changed
       
     - name: Get current CentOS release
