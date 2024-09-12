@@ -30,17 +30,19 @@
         state: latest
       when: repo_modified.changed
 
-    - name: Reboot the system
+   - name: Reboot the system
       reboot:
         msg: "Reboot initiated by Ansible after updating CentOS."
-        reboot_timeout: 300
+        reboot_timeout: 600  # Extended timeout
+        pre_reboot_delay: 10  # Wait before reboot starts
+        post_reboot_delay: 30 # Wait after reboot before checking connection
       when: repo_modified.changed
 
     - name: Wait for the system to become reachable
       wait_for_connection:
-        timeout: 300
+        timeout: 300  # Adjust as necessary for your environment
       when: repo_modified.changed
-
+      
     - name: Get current CentOS release
       command: cat /etc/centos-release
       register: centos_release
