@@ -30,7 +30,7 @@
         state: latest
       when: repo_modified.changed
 
-   - name: Reboot the system
+    - name: Reboot the system
       reboot:
         msg: "Reboot initiated by Ansible after updating CentOS."
         reboot_timeout: 600  # Extended timeout
