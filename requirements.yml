@@ -1,3 +1,4 @@
 ---
 collections:
   - name: infra.convert2rhel
+  - name: infra.leapp
