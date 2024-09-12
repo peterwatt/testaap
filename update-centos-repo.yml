@@ -40,3 +40,11 @@
       wait_for_connection:
         timeout: 300
       when: repo_modified.changed
+
+    - name: Get current CentOS release
+      command: cat /etc/centos-release
+      register: centos_release
+
+    - name: Display CentOS release version
+      debug:
+        msg: "Current CentOS release: {{ centos_release.stdout }}"
