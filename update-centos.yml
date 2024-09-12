@@ -2,6 +2,14 @@
   hosts: all
   become: yes
   tasks:
+    - name: Get current CentOS release
+      command: cat /etc/centos-release
+      register: centos_release
+
+    - name: Display CentOS release version
+      debug:
+        msg: "Current CentOS release: {{ centos_release.stdout }}"
+        
     - name: Modify CentOS-Base.repo
       replace:
         path: /etc/yum.repos.d/CentOS-Base.repo
@@ -38,7 +46,7 @@
 
     - name: Wait for the system to come back online
       wait_for_connection:
-        delay: 60
+        delay: 10
         timeout: 300
       when: repo_modified.changed
       
