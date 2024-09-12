@@ -1,0 +1,35 @@
+---
+- name: Analysis
+  hosts: all
+  strategy: free
+  gather_facts: true
+  become: true
+  force_handlers: true
+
+  vars:
+    satellite_organization: 13088191
+    satellite_activation_key_pre_leapp: Redhat8
+    satellite_activation_key_leapp: Redhat8
+    # By default the analysis role will use:
+    # analysis_repos_el7: rhel-7-server-extras-rpms
+    # Optionally override the default analysis_repos_el7 to use the upstream copr leapp repository:
+    # analysis_repos_el7: copr:copr.fedorainfracloud.org:group_oamg:leapp
+    leapp_preupg_opts: --target 8.8
+    leapp_answerfile: |
+      [remove_pam_pkcs11_module_check]
+      confirm = True
+    rhsm_username: pwatt@deploypartners.com
+    rhsm_password: Fred1234$
+    rhsm_org: 13088191
+    rhsm_activation_key: Redhat8
+
+  tasks:
+      # https://access.redhat.com/solutions/6971716
+    - name: Remove floppy and pata_acpi modules
+      command: rmmod floppy pata_acpi
+      ignore_errors: yes  # Optional: Ignores errors if the modules are not loaded
+      
+    - name: Generate preupgrade analysis report
+      ansible.builtin.import_role:
+        name: infra.leapp.upgrade
+...
