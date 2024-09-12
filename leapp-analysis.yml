@@ -24,6 +24,7 @@
     rhsm_activation_key: Redhat8
 
   tasks:
+      # https://access.redhat.com/solutions/6971716
     - name: Remove floppy and pata_acpi modules
       command: rmmod floppy pata_acpi
       ignore_errors: yes  # Optional: Ignores errors if the modules are not loaded
